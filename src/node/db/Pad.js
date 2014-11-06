@@ -37,7 +37,6 @@ var Pad = function Pad(id) {
   this.atext = Changeset.makeAText("\n");
   this.pool = new AttributePool();
   this.head = -1;
-  this.chatHead = -1;
   this.publicStatus = false;
   this.passwordHash = null;
   this.id = id;
@@ -281,95 +280,6 @@ Pad.prototype.setText = function setText(newText) {
   this.appendRevision(changeset);
 };
 
-Pad.prototype.appendChatMessage = function appendChatMessage(text, userId, time) {
-  this.chatHead++;
-  //save the chat entry in the database
-  db.set("pad:"+this.id+":chat:"+this.chatHead, {"text": text, "userId": userId, "time": time});
-  this.saveToDatabase();
-};
-
-Pad.prototype.getChatMessage = function getChatMessage(entryNum, callback) {
-  var _this = this;
-  var entry;
-
-  async.series([
-    //get the chat entry
-    function(callback)
-    {
-      db.get("pad:"+_this.id+":chat:"+entryNum, function(err, _entry)
-      {
-        if(ERR(err, callback)) return;
-        entry = _entry;
-        callback();
-      });
-    },
-    //add the authorName
-    function(callback)
-    {
-      //this chat message doesn't exist, return null
-      if(entry == null)
-      {
-        callback();
-        return;
-      }
-
-      //get the authorName
-      authorManager.getAuthorName(entry.userId, function(err, authorName)
-      {
-        if(ERR(err, callback)) return;
-        entry.userName = authorName;
-        callback();
-      });
-    }
-  ], function(err)
-  {
-    if(ERR(err, callback)) return;
-    callback(null, entry);
-  });
-};
-
-Pad.prototype.getChatMessages = function getChatMessages(start, end, callback) {
-  //collect the numbers of chat entries and in which order we need them
-  var neededEntries = [];
-  var order = 0;
-  for(var i=start;i<=end; i++)
-  {
-    neededEntries.push({entryNum:i, order: order});
-    order++;
-  }
-
-  var _this = this;
-
-  //get all entries out of the database
-  var entries = [];
-  async.forEach(neededEntries, function(entryObject, callback)
-  {
-    _this.getChatMessage(entryObject.entryNum, function(err, entry)
-    {
-      if(ERR(err, callback)) return;
-      entries[entryObject.order] = entry;
-      callback();
-    });
-  }, function(err)
-  {
-    if(ERR(err, callback)) return;
-
-    //sort out broken chat entries
-    //it looks like in happend in the past that the chat head was
-    //incremented, but the chat message wasn't added
-    var cleanedEntries = [];
-    for(var i=0;i<entries.length;i++)
-    {
-      if(entries[i]!=null)
-        cleanedEntries.push(entries[i]);
-      else
-        console.warn("WARNING: Found broken chat entry in pad " + _this.id);
-    }
-
-    callback(null, cleanedEntries);
-  });
-};
-
 Pad.prototype.init = function init(text, callback) {
   var _this = this;
 
@@ -502,21 +412,6 @@ Pad.prototype.copy = function copy(destinationID, force, callback) {
     function(callback)
     {
       async.parallel([
-        //copy all chat messages
-        function(callback)
-        {
-          var chatHead = _this.chatHead;
-
-          for(var i=0;i<=chatHead;i++)
-          {
-            db.get("pad:"+sourceID+":chat:"+i, function (err, chat) {
-              if (ERR(err, callback)) return;
-              db.set("pad:"+destinationID+":chat:"+i, chat);
-            });
-          }
-
-          callback();
-        },
         //copy all revisions
         function(callback)
         {
@@ -616,18 +511,6 @@ Pad.prototype.remove = function remove(callback) {
 
             callback();
           });
-        },
-        //delete all chat messages
-        function(callback)
-        {
-          var chatHead = _this.chatHead;
-
-          for(var i=0;i<=chatHead;i++)
-          {
-            db.remove("pad:"+padID+":chat:"+i);
-          }
-
-          callback();
         },
         //delete all revisions
         function(callback)

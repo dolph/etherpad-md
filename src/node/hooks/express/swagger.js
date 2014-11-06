@@ -267,24 +267,6 @@ var API = {
     "checkToken" : {
       "func": "checkToken",
       "description": "returns ok when the current api token is valid"
-    },
-    "getChatHistory": {
-      "func": "getChatHistory",
-      "description": "returns the chat history",
-      "response": {"messages":{"type":"List", "items": {"type" : "Message"}}}
-    },
-    // We need an operation that returns a Message so it can be picked up by the codegen :(
-    "getChatHead": {
-      "func": "getChatHead",
-      "description": "returns the chatHead (chat-message) of the pad",
-      "responseProcessor": function(response) {
-        // move this to info
-        if (response.data) {
-          response["chatHead"] = {"time": response.data["chatHead"]};
-          delete response["data"];
-        }
-      },
-      "response": {"chatHead":{"type":"Message"}}
     }
   }
 };

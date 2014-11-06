@@ -210,9 +210,6 @@ var version =
   , "sendClientsMessage"        : ["padID", "msg"]
   , "listAllGroups"             : []
   , "checkToken"                : []
-  , "getChatHistory"            : ["padID"]
-  , "getChatHistory"            : ["padID", "start", "end"]
-  , "getChatHead"               : ["padID"]
   }
 , "1.2.8":
   { "createGroup"               : []
@@ -252,9 +249,6 @@ var version =
   , "sendClientsMessage"        : ["padID", "msg"]
   , "listAllGroups"             : []
   , "checkToken"                : []
-  , "getChatHistory"            : ["padID"]
-  , "getChatHistory"            : ["padID", "start", "end"]
-  , "getChatHead"               : ["padID"]
   }
 , "1.2.9":
   { "createGroup"               : []
@@ -296,9 +290,6 @@ var version =
   , "sendClientsMessage"        : ["padID", "msg"]
   , "listAllGroups"             : []
   , "checkToken"                : []
-  , "getChatHistory"            : ["padID"]
-  , "getChatHistory"            : ["padID", "start", "end"]
-  , "getChatHead"               : ["padID"]
   }
 , "1.2.10":
   { "createGroup"               : []
@@ -341,9 +332,6 @@ var version =
   , "sendClientsMessage"        : ["padID", "msg"]
   , "listAllGroups"             : []
   , "checkToken"                : []
-  , "getChatHistory"            : ["padID"]
-  , "getChatHistory"            : ["padID", "start", "end"]
-  , "getChatHead"               : ["padID"]
   }
 };
 

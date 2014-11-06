@@ -70,13 +70,6 @@ async.series([
     {
       neededDBValues.push("pad:"+padId+":revs:" + i);
     }
-    
-    //get all chat values
-    var chatHead = pad.chatHead;
-    for(var i=0;i<=chatHead;i++)
-    {
-      neededDBValues.push("pad:"+padId+":chat:" + i);
-    }
     callback();
   },
   function (callback) {
@@ -102,5 +95,4 @@ async.series([
 //get all revisions of this pad
 //get all authors related to this pad
 //get the readonly link releated to this pad
-//get the chat entrys releated to this pad
 //remove all keys from database and insert them again

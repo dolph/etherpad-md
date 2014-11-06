@@ -32,7 +32,6 @@ describe("embed links", function(){
 
     var expectedParams = {
       showControls:     'true'
-    , showChat:         'true'
     , showLineNumbers:  'true'
     , useMonospaceFont: 'false'
     }

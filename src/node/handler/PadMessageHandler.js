@@ -207,10 +207,6 @@ exports.handleMessage = function(client, message)
         padChannels.emit(message.padId, {client: client, message: message});// add to pad queue
       } else if (message.data.type == "USERINFO_UPDATE") {
         handleUserInfoUpdate(client, message);
-      } else if (message.data.type == "CHAT_MESSAGE") {
-        handleChatMessage(client, message);
-      } else if (message.data.type == "GET_CHAT_MESSAGES") {
-        handleGetChatMessages(client, message);
       } else if (message.data.type == "SAVE_REVISION") {
         handleSaveRevisionMessage(client, message);
       } else if (message.data.type == "CLIENT_MESSAGE" &&
@@ -347,131 +343,6 @@ exports.handleCustomMessage = function (padID, msg, cb) {
   socketio.sockets.in(padID).json.send(msg);
 
   cb(null, {});
-}
-
-/**
- * Handles a Chat Message
- * @param client the client that send this message
- * @param message the message from the client
- */
-function handleChatMessage(client, message)
-{
-  var time = new Date().getTime();
-  var userId = sessioninfos[client.id].author;
-  var text = message.data.text;
-  var padId = sessioninfos[client.id].padId;
-
-  var pad;
-  var userName;
-
-  async.series([
-    //get the pad
-    function(callback)
-    {
-      padManager.getPad(padId, function(err, _pad)
-      {
-        if(ERR(err, callback)) return;
-        pad = _pad;
-        callback();
-      });
-    },
-    function(callback)
-    {
-      authorManager.getAuthorName(userId, function(err, _userName)
-      {
-        if(ERR(err, callback)) return;
-        userName = _userName;
-        callback();
-      });
-    },
-    //save the chat message and broadcast it
-    function(callback)
-    {
-      //save the chat message
-      pad.appendChatMessage(text, userId, time);
-
-      var msg = {
-        type: "COLLABROOM",
-        data: {
-                type: "CHAT_MESSAGE",
-                userId: userId,
-                userName: userName,
-                time: time,
-                text: text
-              }
-      };
-
-      //broadcast the chat message to everyone on the pad
-      socketio.sockets.in(padId).json.send(msg);
-
-      callback();
-    }
-  ], function(err)
-  {
-    ERR(err);
-  });
-}
-
-/**
- * Handles the clients request for more chat-messages
- * @param client the client that send this message
- * @param message the message from the client
- */
-function handleGetChatMessages(client, message)
-{
-  if(message.data.start == null)
-  {
-    messageLogger.warn("Dropped message, GetChatMessages Message has no start!");
-    return;
-  }
-  if(message.data.end == null)
-  {
-    messageLogger.warn("Dropped message, GetChatMessages Message has no start!");
-    return;
-  }
-
-  var start = message.data.start;
-  var end = message.data.end;
-  var count = start - count;
-
-  if(count < 0 && count > 100)
-  {
-    messageLogger.warn("Dropped message, GetChatMessages Message, client requested invalid amout of messages!");
-    return;
-  }
-
-  var padId = sessioninfos[client.id].padId;
-  var pad;
-
-  async.series([
-    //get the pad
-    function(callback)
-    {
-      padManager.getPad(padId, function(err, _pad)
-      {
-        if(ERR(err, callback)) return;
-        pad = _pad;
-        callback();
-      });
-    },
-    function(callback)
-    {
-      pad.getChatMessages(start, end, function(err, chatMessages)
-      {
-        if(ERR(err, callback)) return;
-
-        var infoMsg = {
-          type: "COLLABROOM",
-          data: {
-            type: "CHAT_MESSAGES",
-            messages: chatMessages
-          }
-        };
-
-        // send the messages back to the client
-        client.json.send(infoMsg);
-      });
-    }]);
 }
 
 /**
@@ -1097,9 +968,6 @@ function handleClientReady(client, message)
           "padId": message.padId,
           "initialTitle": "Pad: " + message.padId,
           "opts": {},
-          // tell the client the number of the latest chat-message, which will be
-          // used to request the latest 100 chat-messages later (GET_CHAT_MESSAGES)
-          "chatHead": pad.chatHead,
           "numConnectedUsers": roomClients.length,
           "readOnlyId": padIds.readOnlyPadId,
           "readonly": padIds.readonly,

@@ -30,7 +30,6 @@
 
   "pad.settings.padSettings": "Pad Settings",
   "pad.settings.myView": "My View",
-  "pad.settings.stickychat": "Chat always on screen",
   "pad.settings.colorcheck": "Authorship colors",
   "pad.settings.linenocheck": "Line numbers",
   "pad.settings.rtlcheck": "Read content from right to left?",
@@ -90,9 +89,6 @@
   "pad.share.readonly": "Read only",
   "pad.share.link": "Link",
   "pad.share.emebdcode": "Embed URL",
-  "pad.chat": "Chat",
-  "pad.chat.title": "Open the chat for this pad.",
-  "pad.chat.loadmessages": "Load more messages",
 
   "timeslider.pageTitle": "{{appTitle}} Timeslider",
   "timeslider.toolbar.returnbutton": "Return to pad",

@@ -36,37 +36,4 @@ describe("change username value", function(){
       });
     }, 1000);
   });
-
-
-  it("Own user name is shown when you enter a chat", function(done) {
-    var inner$ = helper.padInner$;
-    var chrome$ = helper.padChrome$;
-
-    //click on the settings button to make settings visible
-    var $userButton = chrome$(".buttonicon-showusers");
-    $userButton.click();
-    
-    var $usernameInput = chrome$("#myusernameedit");
-    $usernameInput.click();
-
-    $usernameInput.val('John McLear');
-    $usernameInput.blur();
-
-    //click on the chat button to make chat visible
-    var $chatButton = chrome$("#chaticon");
-    $chatButton.click();
-    var $chatInput = chrome$("#chatinput");
-    $chatInput.sendkeys('O hi'); // simulate a keypress of typing JohnMcLear
-    $chatInput.sendkeys('{enter}'); // simulate a keypress of enter actually does evt.which = 10 not 13
-
-    //check if chat shows up
-    helper.waitFor(function(){
-      return chrome$("#chattext").children("p").length !== 0; // wait until the chat message shows up
-    }).done(function(){
-      var $firstChatMessage = chrome$("#chattext").children("p");
-      var containsJohnMcLear = $firstChatMessage.text().indexOf("John McLear") !== -1; // does the string contain John McLear
-      expect(containsJohnMcLear).to.be(true); // expect the first chat message to contain JohnMcLear
-      done();
-    });
-  });
 });

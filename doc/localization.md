@@ -54,11 +54,11 @@ In the javascript files of your plugin, change all hardcoded messages/strings...
 
 from:
 ```js
-alert ('Chat');
+alert ('Foo');
 ```
 to:
 ```js
-alert(window._('pad.chat'));
+alert(window._('pad.foo'));
 ```
 ### 2. Create translate files in the locales directory of your plugin
 
@@ -84,11 +84,11 @@ Everytime the http server is started, it will auto-detect your messages and merg
 ### Overwrite core messages
 
 You can overwrite Etherpad's core messages in your plugin's locale files.
-For example, if you want to replace `Chat` with `Notes`, simply add...
+For example, if you want to replace `Bold` with `Embolden`, simply add...
 
 *ep_your-plugin/locales/en.json*
 ```
 { "ep_your-plugin.h1": "Heading 1"
-, "pad.chat": "Notes"
+, "pad.toolbar.bold.title": "Embolden (ctrl+B)"
 }
 ```

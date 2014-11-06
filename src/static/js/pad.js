@@ -31,7 +31,6 @@ require('./farbtastic');
 require('./excanvas');
 JSON = require('./json2');
 
-var chat = require('./chat').chat;
 var getCollabClient = require('./collab_client').getCollabClient;
 var padconnectionstatus = require('./pad_connectionstatus').padconnectionstatus;
 var padcookie = require('./pad_cookie').padcookie;
@@ -110,7 +109,6 @@ function randomString()
 var getParameters = [
   { name: "noColors",         checkVal: "true",  callback: function(val) { settings.noColors = true; $('#clearAuthorship').hide(); } },
   { name: "showControls",     checkVal: "false", callback: function(val) { $('#editbar').hide(); $('#editorcontainer').css({"top":"0px"}); } },
-  { name: "showChat",         checkVal: "false", callback: function(val) { $('#chaticon').hide(); } },
   { name: "showLineNumbers",  checkVal: "false", callback: function(val) { settings.LineNumbersDisabled = true; } },
   { name: "useMonospaceFont", checkVal: "true",  callback: function(val) { settings.useMonospaceFontGlobal = true; } },
   // If the username is set as a parameter we should set a global value that we can call once we have initiated the pad.
@@ -118,7 +116,6 @@ var getParameters = [
   // If the userColor is set as a parameter, set a global value to use once we have initiated the pad.
   { name: "userColor",        checkVal: null,    callback: function(val) { settings.globalUserColor = decodeURIComponent(val); } },
   { name: "rtl",              checkVal: "true",  callback: function(val) { settings.rtlIsTrue = true } },
-  { name: "alwaysShowChat",   checkVal: "true",  callback: function(val) { chat.stickToScreen(); } },
   { name: "lang",             checkVal: null,    callback: function(val) { window.html10n.localize([val, 'en']); } }
 ];
 
@@ -448,8 +445,6 @@ var pad = {
   {
     pad.clientTimeOffset = new Date().getTime() - clientVars.serverTimestamp;
   
-    //initialize the chat
-    chat.init(this);
     padcookie.init(); // initialize the cookies
     pad.initTime = +(new Date());
     pad.padOptions = clientVars.initialOptions;
@@ -499,18 +494,6 @@ var pad = {
     pad.collabClient.setOnChannelStateChange(pad.handleChannelStateChange);
     pad.collabClient.setOnInternalAction(pad.handleCollabAction);
 
-    // load initial chat-messages
-    if(clientVars.chatHead != -1)
-    {
-      var chatHead = clientVars.chatHead;
-      var start = Math.max(chatHead - 100, 0);
-      pad.collabClient.sendMessage({"type": "GET_CHAT_MESSAGES", "start": start, "end": chatHead});
-    }
-    else // there are no messages
-    {
-      $("#chatloadmessagesbutton").css("display", "none");
-    }
-
     function postAceInit()
     {
       padeditbar.init();
@@ -518,10 +501,6 @@ var pad = {
       {
         padeditor.ace.focus();
       }, 0);
-      if(padcookie.getPref("chatAlwaysVisible")){ // if we have a cookie for always showing chat then show it
-        chat.stickToScreen(true); // stick it to the screen
-        $('#options-stickychat').prop("checked", true); // set the checkbox to on
-      }
       if(padcookie.getPref("showAuthorshipColors") == false){
         pad.changeViewOption('showAuthorColors', false);
       }
@@ -742,19 +721,8 @@ var pad = {
       }, 1000);
     }
 
-    pad.determineChatVisibility(isConnected && !isInitialConnect);
     pad.determineAuthorshipColorsVisibility();
 
-  },
-  determineChatVisibility: function(asNowConnectedFeedback){
-    var chatVisCookie = padcookie.getPref('chatAlwaysVisible');
-    if(chatVisCookie){ // if the cookie is set for chat always visible
-      chat.stickToScreen(true); // stick it to the screen
-      $('#options-stickychat').prop("checked", true); // set the checkbox to on
-    }
-    else{
-      $('#options-stickychat').prop("checked", false); // set the checkbox for off
-    }
   },
   determineAuthorshipColorsVisibility: function(){
     var authColCookie = padcookie.getPref('showAuthorshipColors');

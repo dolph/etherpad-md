@@ -123,10 +123,6 @@
                 <% e.begin_block("mySettings"); %>
                 <h2 data-l10n-id="pad.settings.myView"></h2>
                 <p>
-                    <input type="checkbox" id="options-stickychat" onClick="chat.stickToScreen();">
-                    <label for="options-stickychat" data-l10n-id="pad.settings.stickychat"></label>
-                </p>
-                <p>
                     <input type="checkbox" id="options-colorscheck">
                     <label for="options-colorscheck" data-l10n-id="pad.settings.colorcheck"></label>
                 </p>
@@ -296,28 +292,6 @@
             <% e.end_block(); %>
         </div>
 
-        <div id="chaticon" onclick="chat.show();return false;">
-            <span id="chatlabel" data-l10n-id="pad.chat"></span>
-            <span class="buttonicon buttonicon-chat"></span>
-            <span id="chatcounter">0</span>
-        </div>
-
-        <div id="chatbox">
-            <div id="titlebar"><span id ="titlelabel" data-l10n-id="pad.chat"></span>
-              <a id="titlecross" onClick="chat.hide();return false;">-&nbsp;</a>
-              <a id="titlesticky" onClick="chat.stickToScreen(true);$('#options-stickychat').prop('checked', true);return false;" title="Stick chat to screen">█&nbsp;&nbsp;</a>
-            </div>
-            <div id="chattext" class="authorColors">
-                <img alt="loading.." id="chatloadmessagesball" class="chatloadmessages" src="../static/img/loading.gif" align="top">
-                <button id="chatloadmessagesbutton" class="chatloadmessages" data-l10n-id="pad.chat.loadmessages"></button>
-            </div>
-            <div id="chatinputbox">
-                <form>
-                    <input id="chatinput" type="text" maxlength="999">
-                </form>
-            </div>
-        </div>
-
         <div id="focusprotector">&nbsp;</div>
 
         <% e.end_block(); %>
@@ -386,7 +360,6 @@
 
               /* TODO: These globals shouldn't exist. */
               pad = require('ep_etherpad-lite/static/js/pad').pad;
-              chat = require('ep_etherpad-lite/static/js/chat').chat;
               padeditbar = require('ep_etherpad-lite/static/js/pad_editbar').padeditbar;
               padimpexp = require('ep_etherpad-lite/static/js/pad_impexp').padimpexp;
             }());

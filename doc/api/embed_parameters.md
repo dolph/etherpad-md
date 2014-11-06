@@ -3,10 +3,10 @@ You can easily embed your etherpad-lite into any webpage by using iframes. You c
 
 Example:
 
-Cut and paste the following code into any webpage to embed a pad. The parameters below will hide the chat and the line numbers.
+Cut and paste the following code into any webpage to embed a pad. The parameters below will hide the line numbers.
 
 ```
-<iframe src='http://pad.test.de/p/PAD_NAME?showChat=false&showLineNumbers=false' width=600 height=400></iframe>
+<iframe src='http://pad.test.de/p/PAD_NAME?showLineNumbers=false' width=600 height=400></iframe>
 ```
 
 ## showLineNumbers
@@ -15,11 +15,6 @@ Cut and paste the following code into any webpage to embed a pad. The parameters
 Default: true
 
 ## showControls
- * Boolean
-
-Default: true
-
-## showChat
  * Boolean
 
 Default: true
@@ -44,11 +39,6 @@ Default: randomly chosen by pad server
 Example: `userColor=%23ff9900`
 
 ## noColors
- * Boolean
-
-Default: false
-
-## alwaysShowChat
  * Boolean
 
 Default: false

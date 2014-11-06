@@ -11,7 +11,6 @@ Saves all informations about pads
 * **atext** - the latest attributed text
 * **pool** - the attribute pool
 * **head** - the number of the latest revision
-* **chatHead** - the number of the latest chat entry
 * **public** - flag that disables security for this pad
 * **passwordHash** - string that contains a bcrypt hashed password for this pad
 
@@ -22,13 +21,6 @@ Saves a revision $REVNUM of pad $PADID
   * **author** - the autorID of this revision
   * **timestamp** - the timestamp of when this revision was created
 * **changeset** - the changeset of this revision
-
-### pad:$PADID:chat:$CHATNUM
-Saves a chatentry with num $CHATNUM of pad $PADID
-
-* **text** - the text of this chat entry
-* **userId** - the autorID of this chat entry
-* **time** - the timestamp of this chat entry
 
 ### pad2readonly:$PADID
 Translates a padID to a readonlyID
