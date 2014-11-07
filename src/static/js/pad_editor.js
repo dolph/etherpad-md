@@ -141,7 +141,7 @@ var padeditor = (function()
         self.ace.setProperty("showsauthorcolors", !settings.noColors);
 
       v = getOption('useMonospaceFont', false);
-      self.ace.setProperty("textface", (v ? "monospace" : "Arial, sans-serif"));
+      self.ace.setProperty("textface", (v ? "Consolas, 'Liberation Mono', Menlo, Courier, monospace" : "Arial, sans-serif"));
       $("#viewfontmenu").val(v ? "monospace" : "normal");
     },
     dispose: function()
